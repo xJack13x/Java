@@ -22,7 +22,7 @@ public class IsJavaFX extends Application {
     @Override
     public void start(Stage primaryStage) {
         Button btn = new Button();
-        btn.setText("Say 'Hello World'");
+        btn.setText("'Hello World'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
             
             @Override
