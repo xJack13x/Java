@@ -18,6 +18,17 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document; 
+import org.w3c.dom.Element;  
 
 
 /**
@@ -101,7 +112,7 @@ public class Request {
         buttonSaveToXMLFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                saveDataToXMLFile();
             }
         });
         
@@ -195,7 +206,117 @@ public class Request {
             out.println(linia);
         }
         out.close();
-    }                                                                                                                                                                                                                                                                    
+    }
+    
+    private void saveDataToXMLFile() {                                                                                                     
+        FileChooser fileChooser = new FileChooser();                                                                                       
+        File recordsDir = new File(System.getProperty("user.dir"));                                                                        
+        fileChooser.setInitialDirectory(recordsDir);                                                                                       
+        fileChooser.setTitle("Zapisz plik");                                                                                               
+        fileChooser.setInitialFileName("nazwaPliku.xml");                                                                                  
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();                                                                      
+        File plik = fileChooser.showSaveDialog(stage);                                                                                                                                                       
+        String filename = plik.getAbsolutePath();                                                                                          
+
+        try {                                                                                                                              
+            DocumentBuilder budowniczy;                                                                                                    
+            DocumentBuilderFactory fabryka = DocumentBuilderFactory.newInstance();                                                         
+            budowniczy = fabryka.newDocumentBuilder();                                                                                     
+            Document dok = budowniczy.newDocument();                                                                                       
+
+            Element komputery = dok.createElement("Komputery");                                                                            
+
+            for (DataPattern dataModel : data) {                                                                                             
+                Element komputer = dok.createElement("Komputer");                                                                          
+
+                Element producent = dok.createElement("Producent");                                                                        
+                producent.setTextContent(dataModel.getValue(1));                                                                           
+
+                Element matryca = dok.createElement("Matryca");                                                                            
+
+                Element matrycaRozmiar = dok.createElement("RozmiarMatrycy");                                                              
+                matrycaRozmiar.setTextContent(dataModel.getValue(2));                                                                      
+                matryca.appendChild(matrycaRozmiar);                                                                                       
+
+                Element matrycaRozdzielczosc = dok.createElement("Rozdzielczosc");                                                         
+                matrycaRozdzielczosc.setTextContent(dataModel.getValue(3));                                                                
+                matryca.appendChild(matrycaRozdzielczosc);                                                                                 
+
+                Element matrycaTyp = dok.createElement("Typ");                                                                             
+                matrycaTyp.setTextContent(dataModel.getValue(4));                                                                          
+                matryca.appendChild(matrycaTyp);                                                                                                                                                                  
+
+                Element procesor = dok.createElement("Procesor");                                                                          
+
+                Element procesorModel = dok.createElement("ModelProcesora");                                                               
+                procesorModel.setTextContent(dataModel.getValue(5));                                                                       
+                procesor.appendChild(procesorModel);                                                                                       
+
+                Element procesrLiczbaRdzeni = dok.createElement("Rdzenie");                                                                
+                procesrLiczbaRdzeni.setTextContent(dataModel.getValue(6));                                                                 
+                procesor.appendChild(procesrLiczbaRdzeni);                                                                                 
+
+                Element procesrCzestotliwoscTaktowania = dok.createElement("CzestotliwoscTaktowania");                                     
+                procesrCzestotliwoscTaktowania.setTextContent(dataModel.getValue(7));                                                      
+                procesor.appendChild(procesrCzestotliwoscTaktowania);                                                                      
+
+
+                Element ram = dok.createElement("RAM");                                                                                    
+                ram.setTextContent(dataModel.getValue(8));                                                                                 
+
+                Element dysk = dok.createElement("Dysk");                                                                                  
+
+                Element dyskPojemnosc = dok.createElement("Pojemnosc");                                                                    
+                dyskPojemnosc.setTextContent(dataModel.getValue(9));                                                                      
+                dysk.appendChild(dyskPojemnosc);                                                                                           
+
+                Element dyskRodzaj = dok.createElement("Rodzaj");                                                                          
+                dyskRodzaj.setTextContent(dataModel.getValue(10));                                                                         
+                dysk.appendChild(dyskRodzaj);                                                                                              
+
+                Element kartaGraficzna = dok.createElement("KartaGraficzna");                                                              
+
+                Element kartaGraficznaModel = dok.createElement("Model");                                                                  
+                kartaGraficznaModel.setTextContent(dataModel.getValue(11));                                                                
+                kartaGraficzna.appendChild(kartaGraficznaModel);                                                                           
+
+                Element kartaGraficznaPamiec = dok.createElement("Pamiec");                                                                
+                kartaGraficznaPamiec.setTextContent(dataModel.getValue(12));                                                               
+                kartaGraficzna.appendChild(kartaGraficznaPamiec);                                                                          
+
+                Element systemOperacyjny = dok.createElement("Sytem");                                                                     
+                systemOperacyjny.setTextContent(dataModel.getValue(13));                                                                   
+
+                Element naped = dok.createElement("Naped");                                                                                
+                naped.setTextContent(dataModel.getValue(14));                                                                              
+
+                komputer.appendChild(producent);                                                                                           
+                komputer.appendChild(matryca);                                                                                             
+                komputer.appendChild(procesor);                                                                                            
+                komputer.appendChild(ram);                                                                                                 
+                komputer.appendChild(dysk);                                                                                                
+                komputer.appendChild(kartaGraficzna);                                                                                      
+                komputer.appendChild(systemOperacyjny);                                                                                    
+                komputer.appendChild(naped);                                                                                               
+
+                komputery.appendChild(komputer);                                                                                           
+            }                                                                                                                              
+
+            dok.appendChild(komputery);                                                                                                    
+
+            Transformer t = TransformerFactory.newInstance().newTransformer();                                                             
+            t.setOutputProperty(OutputKeys.INDENT, "yes");                                                                                 
+            t.setOutputProperty(OutputKeys.METHOD, "xml");                                                                                 
+
+            t.transform(new DOMSource(dok), new StreamResult(new FileOutputStream(filename + ".xml")));                                    
+        } catch (FileNotFoundException ex) {                                                                                               
+            ex.printStackTrace();                                                                                                          
+        } catch (TransformerException ex) {                                                                                                
+            ex.printStackTrace();                                                                                                          
+        } catch (ParserConfigurationException ex) {                                                                                        
+            ex.printStackTrace();                                                                                                          
+        }                                                                                                                                  
+    }                                                                                                                                                                                                                                                                           
     
 
 }
