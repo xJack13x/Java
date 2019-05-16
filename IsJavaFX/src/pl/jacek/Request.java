@@ -29,7 +29,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document; 
 import org.w3c.dom.Element;  
-
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -119,7 +120,7 @@ public class Request {
         buttonOpenXMLFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                choiceXMLFileAndReadData();
             }
         });
         
@@ -316,7 +317,65 @@ public class Request {
         } catch (ParserConfigurationException ex) {                                                                                        
             ex.printStackTrace();                                                                                                          
         }                                                                                                                                  
-    }                                                                                                                                                                                                                                                                           
+    }                                                                                                                                      
     
+    private void choiceXMLFileAndReadData() {                                                    
+        Stage stage = (Stage) borderPane.getScene().getWindow();                                 
+        FileChooser fileChooser = new FileChooser();                                             
+        fileChooser.setTitle("Wybierz plik txt");                                                
+        File recordsDir = new File(System.getProperty("user.dir"));                              
+        fileChooser.setInitialDirectory(recordsDir);                                             
+        fileChooser.getExtensionFilters().addAll(                                                
+                new FileChooser.ExtensionFilter("Rozszerzenia", "*.xml"));                       
+        File wybranyPlik = fileChooser.showOpenDialog(stage);                                    
+        String filePath = wybranyPlik.getPath();                                           
+        String pathFolder = wybranyPlik.getAbsoluteFile().getParent();                     
+        label.setText(filePath);                                                           
+
+        readDataFromXML(filePath);    
+    }
+    
+    private void readDataFromXML(String filePath) {                                                                                    
+        data.clear();                                                                                                                        
+        try {                                                                                                                                
+
+            File fXmlFile = new File(filePath);                                                                                        
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();                                                         
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();                                                                       
+            Document doc = dBuilder.parse(fXmlFile);                                                                                         
+
+            doc.getDocumentElement().normalize();                                                                                            
+
+            NodeList nList = doc.getElementsByTagName("Komputer");                                                                           
+
+            for (int temp = 0; temp < nList.getLength(); temp++) {                                                                           
+
+                Node nNode = nList.item(temp);                                                                                               
+
+                if (nNode.getNodeType() == Node.ELEMENT_NODE) {                                                                              
+                    DataPattern dataPattern = new DataPattern();                                                                                   
+                    Element eElement = (Element) nNode;                                                                                      
+
+                    dataPattern.setValue(eElement.getElementsByTagName("Producent").item(0).getTextContent(), 1);                              
+                    dataPattern.setValue(eElement.getElementsByTagName("RozmiarMatrycy").item(0).getTextContent(), 2);                         
+                    dataPattern.setValue(eElement.getElementsByTagName("Rozdzielczosc").item(0).getTextContent(), 3);                          
+                    dataPattern.setValue(eElement.getElementsByTagName("Typ").item(0).getTextContent(), 4);                                                        
+                    dataPattern.setValue(eElement.getElementsByTagName("ModelProcesora").item(0).getTextContent(), 5);                         
+                    dataPattern.setValue(eElement.getElementsByTagName("Rdzenie").item(0).getTextContent(), 6);                                
+                    dataPattern.setValue(eElement.getElementsByTagName("CzestotliwoscTaktowania").item(0).getTextContent(), 7);                
+                    dataPattern.setValue(eElement.getElementsByTagName("RAM").item(0).getTextContent(), 8);                                    
+                    dataPattern.setValue(eElement.getElementsByTagName("Pojemnosc").item(0).getTextContent(), 9);                             
+                    dataPattern.setValue(eElement.getElementsByTagName("Rodzaj").item(0).getTextContent(), 10);                                
+                    dataPattern.setValue(eElement.getElementsByTagName("Model").item(0).getTextContent(), 11);                                 
+                    dataPattern.setValue(eElement.getElementsByTagName("Pamiec").item(0).getTextContent(), 12);                                
+                    dataPattern.setValue(eElement.getElementsByTagName("Sytem").item(0).getTextContent(), 13);                                 
+                    dataPattern.setValue(eElement.getElementsByTagName("Naped").item(0).getTextContent(), 14);                                 
+                    data.add(dataPattern);                                                                                       
+                }                                                                                                                            
+            }                                                                                                                                
+        } catch (Exception e) {                                                                                                              
+            e.printStackTrace();                                                                                                             
+        }                                                                                                                                    
+    }                                                                                                                                         
 
 }
