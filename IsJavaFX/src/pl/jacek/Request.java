@@ -3,9 +3,12 @@ package pl.jacek;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -127,7 +130,7 @@ public class Request {
         buttonToZip.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+                createZip();
             }
         });
 
@@ -150,7 +153,6 @@ public class Request {
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Rozszerzenia", "*.txt"));
         File wybranyPlik = fileChooser.showOpenDialog(stage);
         String sciezkaDoPliku = wybranyPlik.getPath();
-        String sciezkaDoFolderu = wybranyPlik.getAbsoluteFile().getParent();
         label.setText(sciezkaDoPliku);
 
         readDataFromTxt(sciezkaDoPliku);
@@ -193,7 +195,6 @@ public class Request {
         fileChooser.setInitialFileName("nazwaPliku.txt");
         Stage stage = (Stage) this.borderPane.getScene().getWindow();
         File plik = fileChooser.showSaveDialog(stage);
-        String sciezkaDoFolderu = plik.getAbsoluteFile().getParent();
         String filename = plik.getAbsolutePath();
 
         PrintWriter out = null;
@@ -328,8 +329,7 @@ public class Request {
         fileChooser.getExtensionFilters().addAll(                                                
                 new FileChooser.ExtensionFilter("Rozszerzenia", "*.xml"));                       
         File wybranyPlik = fileChooser.showOpenDialog(stage);                                    
-        String filePath = wybranyPlik.getPath();                                           
-        String pathFolder = wybranyPlik.getAbsoluteFile().getParent();                     
+        String filePath = wybranyPlik.getPath();                                                              
         label.setText(filePath);                                                           
 
         readDataFromXML(filePath);    
@@ -376,6 +376,36 @@ public class Request {
         } catch (Exception e) {                                                                                                              
             e.printStackTrace();                                                                                                             
         }                                                                                                                                    
-    }                                                                                                                                         
+    }                                                                                                                                        
+    
+    private void createZip() {                                                  
+        FileChooser fileChooser = new FileChooser();                            
+        File recordsDir = new File(System.getProperty("user.dir"));             
+        fileChooser.setInitialDirectory(recordsDir);                            
+        fileChooser.setTitle("Zapisz plik");                                    
+        fileChooser.setInitialFileName("nazwaPliku.txt");                       
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();           
+        File plik = fileChooser.showSaveDialog(stage);                                   
+        String filename = plik.getAbsolutePath();                               
 
+        StringBuilder sb = new StringBuilder();                                 
+        for (DataPattern dataPattern : data) {                                      
+            sb.append(dataPattern.toString() + "\n");                             
+        }                                                                       
+        try {                                                                   
+            File f = new File(filename + ".zip");                               
+            ZipOutputStream out = new ZipOutputStream(new FileOutputStream(f)); 
+            ZipEntry e = new ZipEntry("nazwaPliku.txt");                            
+
+            out.putNextEntry(e);                                                
+
+            byte[] data = sb.toString().getBytes();                             
+            out.write(data, 0, data.length);                                    
+            out.closeEntry();                                                   
+
+            out.close();                                                        
+        } catch (IOException e1) {                                              
+            e1.printStackTrace();                                               
+        }
+    }
 }
