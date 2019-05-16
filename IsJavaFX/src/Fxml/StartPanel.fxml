@@ -8,6 +8,7 @@
 
 <AnchorPane id="AnchorPane" prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.jacek.StartPanel">
     <children>
-      <Button fx:id="przyciskZadanie1" layoutX="50.0" layoutY="50.0" mnemonicParsing="false" onAction="#otworzZadanie1" prefHeight="74.0" prefWidth="252.0" text="Rozpocznij" />
+      <Button fx:id="przyciskZadanie1" layoutX="50.0" layoutY="50.0" mnemonicParsing="false" onAction="#otworzZadanie1" prefHeight="34.0" prefWidth="252.0" text="Rozpocznij" />
+      <Button fx:id="przyciskZadanie2" layoutX="50.0" layoutY="100.0" mnemonicParsing="false" onAction="#otworzZadanie2" prefHeight="34.0" prefWidth="252.0" text="Zamknij" />
    </children>
 </AnchorPane>

@@ -23,7 +23,6 @@ public class DataPattern {
     private final StringProperty value12 = new SimpleStringProperty();
     private final StringProperty value13 = new SimpleStringProperty();
     private final StringProperty value14 = new SimpleStringProperty();
-    private final StringProperty value15 = new SimpleStringProperty();
 
     public String getValue(int numer) {
         if (numer == 1) {
@@ -54,8 +53,6 @@ public class DataPattern {
             return value13.get();
         } else if (numer == 14) {
             return value14.get();
-        } else if (numer == 15) {
-            return value15.get();
         }
         return "Błąd";
     }
@@ -89,8 +86,6 @@ public class DataPattern {
             value13.set(value);
         } else if (index == 14) {
             value14.set(value);
-        } else if (index == 15) {
-            value15.set(value);
         }
     }
 
@@ -262,18 +257,6 @@ public class DataPattern {
         this.value14.set(value14);
     }
 
-    public String getValue15() {
-        return value15.get();
-    }
-
-    public StringProperty value15Property() {
-        return value15;
-    }
-
-    public void setValue15(String value15) {
-        this.value15.set(value15);
-    }
-
     @Override
     public String toString() {
         return "" + value1.get() +
@@ -290,7 +273,6 @@ public class DataPattern {
                 ";" + value12.get() +
                 ";" + value13.get() +
                 ";" + value14.get() +
-                ";" + value15.get() +
                 ';';
     }
 }

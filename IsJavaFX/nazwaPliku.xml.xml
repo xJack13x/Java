@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Komputery>
+<Komputer>
+<Producent>Asus</Producent>
+<Matryca>
+<RozmiarMatrycy>15''</RozmiarMatrycy>
+<Rozdzielczosc>1366x768</Rozdzielczosc>
+<Typ>antyrefleksyjna</Typ>
+</Matryca>
+<Procesor>
+<ModelProcesora>Intel Celeron N4000</ModelProcesora>
+<Rdzenie>2</Rdzenie>
+<CzestotliwoscTaktowania>2.6 GHz</CzestotliwoscTaktowania>
+</Procesor>
+<RAM>4 GB</RAM>
+<Dysk>
+<Pojemnosc>500 GB</Pojemnosc>
+<Rodzaj>HDD</Rodzaj>
+</Dysk>
+<KartaGraficzna>
+<Model>Intel HD Graphics 520</Model>
+<Pamiec>DDR4</Pamiec>
+</KartaGraficzna>
+<Sytem>Windows 10 Home</Sytem>
+<Naped>brak</Naped>
+</Komputer>
+</Komputery>
