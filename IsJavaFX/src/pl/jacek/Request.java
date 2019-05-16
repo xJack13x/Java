@@ -1,6 +1,9 @@
 package pl.jacek;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 
@@ -88,7 +92,7 @@ public class Request {
         buttonOpenFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+                choiceTxtFileAndReadData();
             }
         });   
 
@@ -123,6 +127,49 @@ public class Request {
         this.borderPane.setCenter(table);
     }
     
+    private void choiceTxtFileAndReadData() {
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Wybierz plik txt");
+        File recordsDir = new File(System.getProperty("user.dir"));
+        fileChooser.setInitialDirectory(recordsDir);
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Rozszerzenia", "*.txt"));
+        File wybranyPlik = fileChooser.showOpenDialog(stage);
+        String sciezkaDoPliku = wybranyPlik.getPath();
+        String sciezkaDoFolderu = wybranyPlik.getAbsoluteFile().getParent();
+        label.setText(sciezkaDoPliku);
+
+        readDataFromTxt(sciezkaDoPliku);
+        buildTable();
+    } 
+    
+    public void readDataFromTxt(String sciezka) {
+        lineOfFile.clear();
+        File file = new File(sciezka);
+        Scanner sc = null;
+        try {
+            sc = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        while (sc.hasNextLine()) {
+            lineOfFile.add(sc.nextLine());
+        }
+
+        data.clear();
+        for (String linia : lineOfFile) {
+            String[] names = linia.split(";");
+
+            int licznik = 1;
+            DataPattern dataPattern= new DataPattern();
+            for (String komorka : names) {
+                dataPattern.setValue(komorka, licznik);
+                licznik++;
+            }
+            data.add(dataPattern);
+        }
+    }
     
 
 }
