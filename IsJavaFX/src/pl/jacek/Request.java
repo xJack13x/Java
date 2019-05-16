@@ -2,6 +2,8 @@ package pl.jacek;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import javafx.collections.FXCollections;
@@ -85,7 +87,7 @@ public class Request {
         buttonSaveToFIle.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                
+                saveDataToTxtFile();
             }
         });
 
@@ -170,6 +172,30 @@ public class Request {
             data.add(dataPattern);
         }
     }
+    
+    private void saveDataToTxtFile() {
+        FileChooser fileChooser = new FileChooser();
+        File recordsDir = new File(System.getProperty("user.dir"));
+        fileChooser.setInitialDirectory(recordsDir);
+        fileChooser.setTitle("Zapisz plik");
+        fileChooser.setInitialFileName("nazwaPliku.txt");
+        Stage stage = (Stage) this.borderPane.getScene().getWindow();
+        File plik = fileChooser.showSaveDialog(stage);
+        String sciezkaDoFolderu = plik.getAbsoluteFile().getParent();
+        String filename = plik.getAbsolutePath();
+
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(filename + ".txt");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        for (DataPattern dataPattern : data) {
+            String linia = dataPattern.toString();
+            out.println(linia);
+        }
+        out.close();
+    }                                                                                                                                                                                                                                                                    
     
 
 }
